@@ -32,6 +32,12 @@ typedef std::string native_args;
 inline std::string build_args(const std::string & exe, std::vector<std::string> && data)
 {
     std::string st = exe;
+    auto it = std::find(st.begin(), st.end(), ' ');//contains space?
+    if (it != st.end())//ok, contains spaces.
+    {
+        st.insert(st.begin(), '"');
+        st += '"';
+    }
     for (auto & arg : data)
     {
         boost::replace_all(arg, "\"", "\\\"");
