@@ -26,7 +26,7 @@
 
 namespace boost { namespace process { namespace detail { namespace windows {
 
-
+#if defined(_GLIBCXX_HAS_GTHREADS)
 template<typename Buffer>
 struct async_in_buffer : ::boost::process::detail::windows::async_handler
 {
@@ -106,7 +106,7 @@ struct async_in_buffer : ::boost::process::detail::windows::async_handler
         exec.inherit_handles = true;
     }
 };
-
+#endif
 
 }}}}
 
