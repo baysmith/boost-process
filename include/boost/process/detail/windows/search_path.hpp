@@ -22,8 +22,6 @@
 #include <cstdlib>
 #include <boost/detail/winapi/shell.hpp>
 
-
-
 namespace boost { namespace process { namespace detail { namespace windows {
 
 inline std::string search_path(
@@ -41,12 +39,16 @@ inline std::string search_path(
     typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
     boost::char_separator<char> sep(";");
     tokenizer tok(path, sep);
+
+    std::string pathext = ";.exe;.com;.bat;.cmd";
+    if (auto pathext_var = ::getenv("PATHEXT"))
+        pathext = std::string(";") + pathext_var;
+    boost::char_separator<char> ext_sep(";", "", boost::keep_empty_tokens);
+    tokenizer ext_tok(pathext, ext_sep);
     for (boost::filesystem::path p : tok)
     {
         p /= filename;
-        std::array<std::string, 4> extensions =
-            { "", ".exe", ".com", ".bat" };
-        for (boost::filesystem::path ext : extensions)
+        for (boost::filesystem::path ext : ext_tok)
         {
             boost::filesystem::path p2 = p;
             p2 += ext;
